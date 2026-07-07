@@ -1,0 +1,74 @@
+package basics;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class GettingData {
+
+	private static final String URL = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
+	private static final String USERNAME = "BANKSPHERE";
+	private static final String PASSWORD = "banksphere123";
+
+	private static Logger logger = LogManager.getLogger("appLog");
+
+	public static void main(String[] args) {
+		getStudents();
+		printStudents();
+
+	}
+
+	public static List<Map<String, Object>> getStudents() {
+		List<Map<String, Object>> StudentList = new ArrayList<>();
+		String sql = "Select * from student";
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pst = conn.prepareStatement(sql);
+				ResultSet rs = pst.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Object> StudentMap = new HashMap<>();
+
+				StudentMap.put("USER_ID", rs.getInt("USER_ID"));
+				StudentMap.put("STUDENT_NAME", rs.getString("STUDENT_NAME"));
+				StudentMap.put("DEPT", rs.getString("DEPT"));
+				StudentMap.put("FATHER_NAME", rs.getString("FATHER_NAME"));
+				StudentMap.put("MOTHER_NAME", rs.getString("MOTHER_NAME"));
+				StudentMap.put("ADDRESS", rs.getString("ADDRESS"));
+
+				StudentList.add(StudentMap);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return StudentList;
+	}
+
+	public static void printStudents() {
+		List<Map<String, Object>> students = getStudents();
+		int count = 1;
+		for (Map<String, Object> student : students) {
+
+			logger.info("Student " + count);
+
+			// logger.info();
+			logger.info("USER_ID			: " + student.get("USER_ID"));
+			logger.info("STUDENT_NAME		: " + student.get("STUDENT_NAME"));
+			logger.info("DEPT				: " + student.get("DEPT"));
+			logger.info("FATHER_NAME		: " + student.get("FATHER_NAME"));
+			logger.info("MOTHER_NAME		: " + student.get("MOTHER_NAME"));
+			logger.info("ADDRESS			: " + student.get("ADDRESS"));
+
+			logger.info("================");
+			count = count + 1;
+		}
+
+	}
+}
