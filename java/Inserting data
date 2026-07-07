@@ -1,0 +1,60 @@
+package basics;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class InsertingData {
+
+	private static final String URL = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
+	private static final String USERNAME = "BANKSPHERE";
+	private static final String PASSWORD = "banksphere123";
+
+	private static Logger logger = LogManager.getLogger("appLog");
+
+	public static void main(String[] args) {
+		pstm();
+	}
+
+	public static void pstm() {
+		LocalDateTime now = LocalDateTime.now();
+		Timestamp timestamp = Timestamp.valueOf(now);
+		logger.info("timestamp "+ timestamp);
+		String datestr = "2026-07-04";
+		LocalDate date = LocalDate.parse(datestr);
+		logger.info("date "+ date);
+
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pst = conn.prepareStatement(
+						"INSERT INTO STUDENT (user_id,student_name,dept,father_name,mother_name,address,pincode,email,mobile,password,created_time,flag,created_date,doc_text,doc_file) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+			pst.setInt(1, 223);
+			pst.setString(2, "Sivaraman");
+			pst.setString(3, "CSE");
+			pst.setString(4, "SARAVANAN");
+			pst.setString(5, "KASTURI");
+			pst.setString(6, "NO.23, Vinayagar koil st");
+			pst.setInt(7, 605009);
+			pst.setString(8, "sivausing@gmail.com");
+			pst.setBigDecimal(9, new BigDecimal("8248106691"));
+			pst.setString(10, "123");
+			pst.setTimestamp(11, timestamp);
+			pst.setString(12, "y");
+			pst.setDate(13, java.sql.Date.valueOf(date));
+			pst.setString(14, null);
+			pst.setString(15, null);
+
+			int rows = pst.executeUpdate();
+			logger.info("Inserted " + rows + " rows");
+		} catch (Exception e) {
+			logger.error("Exception " + e);
+			e.printStackTrace();
+		}
+	}
+}
