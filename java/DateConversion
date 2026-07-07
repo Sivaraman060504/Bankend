@@ -1,0 +1,56 @@
+package basics;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class DateUtils {
+
+	private static Logger logger = LogManager.getLogger("appLog");
+
+	public static void main(String[] args) {
+		// LocalDate date = LocalDate.now();
+		// logger.info(date);
+		// java.sql.Date sqlDate = convertToSqlDate(date);
+		// logger.info("sqlDate " + sqlDate);
+		// LocalDate convertedBack = convertToLocalDate(sqlDate);
+		// logger.info("convertedBack " + convertedBack);
+
+		LocalDate date = convertToLocalDate("06/07/2026", "dd/MM/yyyy");
+		logger.info("convertToLocalDate " + date);
+
+		java.sql.Date sqlDate = java.sql.Date.valueOf(date);
+		logger.info("sqlDate " + sqlDate);
+		String formattedDate = convertSqlDateToString(sqlDate, "dd/MM/yyyy");
+		logger.info("formattedDate " + formattedDate);
+	}
+
+	public static Date convertToSqlDate(LocalDate localDate) {
+		return Date.valueOf(localDate);
+	}
+
+	public static LocalDate convertToLocalDate(Date sqlDate) {
+		return sqlDate.toLocalDate();
+	}
+
+	public static LocalDate convertToLocalDate(String date, String format) {
+		if (date == null || format == null) {
+			logger.error("Date and format cannot be a null");
+			return null;
+		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+		return LocalDate.parse(date, formatter);
+	}
+
+	public static String convertSqlDateToString(Date sqlDate, String format) {
+		if (sqlDate == null || format == null) {
+			logger.error("Date and format cannot be a null");
+			return null;
+		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+		return sqlDate.toLocalDate().format(formatter);
+	}
+}
