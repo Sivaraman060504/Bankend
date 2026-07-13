@@ -1,0 +1,73 @@
+package basics;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class StreamAPI {
+	public static void main(String[] args) throws InterruptedException {
+		List<Integer> numbers = Arrays.asList(10, 20, 30, 40, 50);
+		List<String> names = Arrays.asList("siva", "raman");
+		// enhanced for loop
+
+		// for (Integer num : numbers) {
+		// if (num > 20) {
+		// System.out.println(num);
+		// }
+		// }
+
+		// Using Stream
+		// filtering the value greater than 20
+		numbers.stream().filter(num -> num > 20).forEach(System.out::println);
+
+		// counting the numbers which is greater than 20
+		long count = numbers.stream().filter(num -> num > 20).count();
+		System.out.println(count);
+
+		// converting small letter into the captial letter
+		names.stream().map(String::toUpperCase).forEach(System.out::println);
+
+		// Multiple the number
+		numbers.stream().map(n -> n * 2).forEach(System.out::println);
+
+		// converting integer to string
+		numbers.stream().map(String::valueOf).forEach(System.out::println);
+
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Runnning");
+			}
+		};
+
+		runnable.run();
+
+		Runnable task = () -> System.out.println("hello");
+		task.run();
+
+		Thread t = new Thread(() -> {
+			System.out.println(Thread.currentThread().getName());
+		});
+
+		// here run() is used call the method and there is new thread created here
+		t.run();
+
+		// here start() is used to create the new thread , that why it give the
+		// thread-0;
+		t.start();
+
+		Thread number = new Thread(() -> {
+
+			int i = 0;
+			while (i < 5) {
+				i++;
+				System.out.println(i);
+			}
+		});
+
+		System.out.println("before");
+		number.start();
+		number.join();
+		System.out.println("after");
+
+	}
+}
