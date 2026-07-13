@@ -1,0 +1,60 @@
+package basics;
+
+public class ThreadBasics {
+
+	public static void main(String[] args) throws InterruptedException {
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Runnning");
+			}
+		};
+
+		runnable.run();
+
+		Runnable task = () -> System.out.println("hello");
+		task.run();
+
+		Thread t = new Thread(() -> {
+			System.out.println(Thread.currentThread().getName());
+		});
+
+		// here run() is used call the method and there is new thread created here
+		t.run();
+
+		// here start() is used to create the new thread , that why it give the
+		// thread-0;
+		t.start();
+
+		Thread number = new Thread(() -> {
+
+			int i = 0;
+			while (i < 5) {
+				i++;
+				System.out.println(i);
+			}
+		});
+
+		System.out.println("before");
+		number.start();
+		number.join();
+		System.out.println("after");
+		try {
+			int age = validateAge(15);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static int validateAge(int age) throws Exception {
+
+		if (age < 18) {
+
+			throw new Exception("Age must be 18 or above");
+		}
+
+		System.out.println("Eligible");
+		return age;
+	}
+}
